@@ -245,6 +245,81 @@ class TestAPI(unittest.TestCase):
             422
         )
 
+    def test_reject_oversized_file(self):
+
+        oversized_content = b"x" * (
+            10 * 1024 * 1024 + 1
+        )
+
+        response = self.client.post(
+            "/api/analyze",
+            files={
+                "file": (
+                    "large.txt",
+                    oversized_content,
+                    "text/plain",
+                )
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            413
+        )
+
+        self.assertIn(
+            "File is too large",
+            response.json()["detail"]
+        )
+
+
+    def test_reject_invalid_pdf_content(self):
+
+        response = self.client.post(
+            "/api/analyze",
+            files={
+                "file": (
+                    "fake.pdf",
+                    b"This is not actually a PDF.",
+                    "application/pdf",
+                )
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400
+        )
+
+        self.assertIn(
+            "does not match its file type",
+            response.json()["detail"]
+        )
+
+
+    def test_reject_invalid_docx_content(self):
+
+        response = self.client.post(
+            "/api/analyze",
+            files={
+                "file": (
+                    "fake.docx",
+                    b"This is not actually a DOCX.",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                )
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400
+        )
+
+        self.assertIn(
+            "does not match its file type",
+            response.json()["detail"]
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
