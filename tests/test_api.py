@@ -83,6 +83,11 @@ class TestAPI(unittest.TestCase):
             "EXCELLENT"
         )
 
+        self.assertEqual(
+            len(result["requirements"]),
+            39
+        )
+
     def test_analyze_docx(self):
 
         with open(
@@ -125,6 +130,85 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(
             result["summary"]["classification"],
             "EXCELLENT"
+        )
+
+    def test_public_response_does_not_expose_internal_analysis(
+        self
+    ):
+
+        with open(
+            self.pdf_path,
+            "rb"
+        ) as file:
+
+            response = self.client.post(
+                "/api/analyze",
+                files={
+                    "file": (
+                        "SELP_SRS.pdf",
+                        file,
+                        "application/pdf",
+                    )
+                },
+            )
+
+        self.assertEqual(
+            response.status_code,
+            200
+        )
+
+        result = response.json()
+
+        # Internal NLP analysis should not be exposed.
+        self.assertNotIn(
+            "analysis",
+            result["requirements"][0]
+        )
+
+        # Temporary server paths should not be exposed.
+        self.assertNotIn(
+            "file_path",
+            result["document"]
+        )
+
+    def test_requirement_contains_public_fields(
+        self
+    ):
+
+        with open(
+            self.pdf_path,
+            "rb"
+        ) as file:
+
+            response = self.client.post(
+                "/api/analyze",
+                files={
+                    "file": (
+                        "SELP_SRS.pdf",
+                        file,
+                        "application/pdf",
+                    )
+                },
+            )
+
+        self.assertEqual(
+            response.status_code,
+            200
+        )
+
+        requirement = response.json()["requirements"][0]
+
+        expected_fields = {
+            "id",
+            "text",
+            "score",
+            "classification",
+            "findings",
+        }
+
+        self.assertEqual(
+            set(requirement.keys()),
+            expected_fields
         )
 
     def test_reject_unsupported_file_type(self):

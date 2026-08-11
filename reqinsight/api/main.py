@@ -8,6 +8,8 @@ from reqinsight.application.analysis_service import (
     RequirementAnalysisService
 )
 
+from reqinsight.api.schemas import AnalysisResponse
+
 
 app = FastAPI(
     title="ReqInsight API",
@@ -26,6 +28,54 @@ ALLOWED_EXTENSIONS = {
 }
 
 
+def build_public_response(
+    result: dict,
+    original_filename: str
+) -> dict:
+
+    requirements = []
+
+    for requirement in result["requirements"]:
+
+        findings = []
+
+        for finding in requirement.get("findings", []):
+
+            findings.append({
+                "rule": finding["rule"],
+                "severity": finding["severity"],
+                "message": finding["message"],
+                "recommendation": finding["recommendation"],
+            })
+
+        requirements.append({
+            "id": requirement["requirement_id"],
+            "text": requirement["text"],
+            "score": requirement["score"],
+            "classification": requirement["classification"],
+            "findings": findings,
+        })
+
+    summary = result["summary"]
+
+    return {
+        "document": {
+            "file_name": original_filename,
+            "requirement_count": summary["total_requirements"],
+        },
+        "summary": {
+            "score": summary["score"],
+            "classification": summary["classification"],
+            "total_requirements": summary["total_requirements"],
+            "excellent": summary["excellent"],
+            "good": summary["good"],
+            "needs_review": summary["needs_review"],
+            "poor": summary["poor"],
+        },
+        "requirements": requirements,
+    }
+
+
 @app.get("/api/health")
 def health_check():
     return {
@@ -34,7 +84,10 @@ def health_check():
     }
 
 
-@app.post("/api/analyze")
+@app.post(
+    "/api/analyze",
+    response_model=AnalysisResponse
+)
 async def analyze_document(
     file: UploadFile = File(...)
 ):
@@ -44,10 +97,6 @@ async def analyze_document(
     Supported formats:
     PDF, DOCX, TXT
     """
-
-    # ---------------------------------------------------------
-    # 1. Validate filename
-    # ---------------------------------------------------------
 
     if not file.filename:
         raise HTTPException(
@@ -65,10 +114,6 @@ async def analyze_document(
                 "Supported formats: PDF, DOCX, TXT."
             ),
         )
-
-    # ---------------------------------------------------------
-    # 2. Create temporary file
-    # ---------------------------------------------------------
 
     temporary_path = None
 
@@ -88,18 +133,14 @@ async def analyze_document(
                 temporary_file,
             )
 
-        # -----------------------------------------------------
-        # 3. Run ReqInsight analysis
-        # -----------------------------------------------------
-
         result = analysis_service.analyze(
             temporary_path
         )
 
-        # Preserve the user's original filename
-        result["document"]["file_name"] = file.filename
-
-        return result
+        return build_public_response(
+            result,
+            file.filename,
+        )
 
     except Exception as exc:
 
@@ -109,10 +150,6 @@ async def analyze_document(
         )
 
     finally:
-
-        # -----------------------------------------------------
-        # 4. Delete temporary file
-        # -----------------------------------------------------
 
         if temporary_path and temporary_path.exists():
             temporary_path.unlink()
