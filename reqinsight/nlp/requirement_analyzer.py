@@ -53,6 +53,7 @@ class RequirementAnalyzer:
             "has_vague_terms": len(vague_terms) > 0,
             "quantifiable_constraints": quantifiable_constraints,
             "has_quantifiable_constraint": len(quantifiable_constraints) > 0,
+            "text": requirement.text,
         }
 
     def _tokenize(self, text: str):

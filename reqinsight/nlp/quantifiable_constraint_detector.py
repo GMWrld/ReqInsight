@@ -8,7 +8,7 @@ class QuantifiableConstraintDetector:
     PATTERNS = [
         r"\b\d+(?:\.\d+)?\s*%",
         r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(?:ms|milliseconds?)\b",
-        r"\b\d+(?:\.\d+)?\s*(?:s|sec|secs|seconds?)\b",
+        r"\b\d+(?:\.\d+)?\s*(?:s|sec|secs|seconds?|h|hr|hrs|hours?)\b",
         r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(?:users?|requests?|items?|records?)\b",
     ]
 

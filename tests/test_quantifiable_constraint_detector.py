@@ -46,6 +46,17 @@ class TestQuantifiableConstraintDetector(unittest.TestCase):
 
         self.assertEqual(result, [])
 
+    def test_detect_hours_constraint(self):
+
+        text = (
+            "The system must perform automated backups "
+            "every 24 hours."
+        )
+
+        result = self.detector.detect(text)
+
+        self.assertIn("24 hours", result)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,11 +1,16 @@
 from typing import Dict, List
 
+from reqinsight.analysis.verifiability_detector import VerifiabilityDetector
+
 
 class QualityRuleEngine:
     """
     Evaluates software requirements against basic
     requirement-quality rules.
     """
+
+    def __init__(self):
+        self.verifiability_detector = VerifiabilityDetector()
 
     def evaluate(self, analysis: Dict) -> List[Dict]:
         """
@@ -77,27 +82,43 @@ class QualityRuleEngine:
 
         return []
 
-    def _check_measurability(self, analysis: Dict) -> List[Dict]:
-        """Check whether a requirement contains measurable constraints."""
+    def _check_measurability(self, analysis):
+        """Check whether a requirement contains measurable or
+        otherwise verifiable criteria."""
 
         requirement_id = analysis.get("requirement_id", "")
+
         constraints = analysis.get(
             "quantifiable_constraints", []
         )
 
-        # For NFRs, measurable constraints are especially important.
-        if requirement_id.startswith("NFR-") and not constraints:
+        text = analysis.get("text", "")
+
+        verifiability = self.verifiability_detector.detect(text)
+
+        # Quantitative constraints make the requirement measurable.
+        if constraints:
+            return []
+
+        # Technical criteria or explicit verification indicators
+        # make the requirement objectively verifiable.
+        if verifiability["verifiable"]:
+            return []
+
+        # Apply this rule primarily to non-functional requirements.
+        if requirement_id.startswith("NFR-"):
             return [
                 {
                     "rule": "MEASURABILITY",
                     "severity": "WARNING",
                     "message": (
                         "Non-functional requirement does not contain "
-                        "an explicit measurable constraint."
+                        "an explicit measurable or verifiable criterion."
                     ),
                     "recommendation": (
                         "Consider adding a measurable target, "
-                        "threshold, limit, or acceptance criterion."
+                        "threshold, technical criterion, or "
+                        "acceptance criterion."
                     ),
                 }
             ]
