@@ -11,11 +11,25 @@ from reqinsight.application.analysis_service import (
 
 from reqinsight.api.schemas import AnalysisResponse
 
+from fastapi.middleware.cors import CORSMiddleware
+
+from reqinsight.api.config import (
+    ALLOWED_ORIGINS,
+    MAX_FILE_SIZE,
+)
 
 app = FastAPI(
     title="ReqInsight API",
     description="REST API for SRS quality analysis",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
 )
 
 
@@ -43,7 +57,6 @@ ALLOWED_CONTENT_TYPES = {
     },
 }
 
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 
 def validate_file_content(
