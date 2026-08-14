@@ -19,11 +19,12 @@ class RequirementCandidateDetector:
     """
     Domain-agnostic detector for requirement-like text.
 
-    The detector deliberately does NOT depend on domain-specific
-    actors such as students, doctors, customers, educators, etc.
+    The detector relies on linguistic and structural evidence rather
+    than specific application domains such as healthcare, banking,
+    education, or e-commerce.
     """
 
-    # Explicit requirement identifiers.
+    # Generic requirement identifiers.
     #
     # Examples:
     # FR-01
@@ -44,9 +45,9 @@ class RequirementCandidateDetector:
     MODAL_PATTERN = re.compile(
         r"\b("
         r"must|shall|should|may|"
-        r"required to|"
-        r"is required to|"
-        r"are required to"
+        r"required\s+to|"
+        r"is\s+required\s+to|"
+        r"are\s+required\s+to"
         r")\b",
         re.IGNORECASE,
     )
@@ -68,15 +69,19 @@ class RequirementCandidateDetector:
             re.IGNORECASE,
         ),
         re.compile(
-            r"\ballows?\s+(?:users?|customers?|"
-            r"people|administrators?|actors?|"
-            r"clients?|operators?)\s+to\b",
+            r"\ballows?\s+"
+            r"(?:users?|customers?|people|"
+            r"administrators?|actors?|"
+            r"clients?|operators?|"
+            r"staff|employees?)\s+to\b",
             re.IGNORECASE,
         ),
         re.compile(
-            r"\benables?\s+(?:users?|customers?|"
-            r"people|administrators?|actors?|"
-            r"clients?|operators?)\s+to\b",
+            r"\benables?\s+"
+            r"(?:users?|customers?|people|"
+            r"administrators?|actors?|"
+            r"clients?|operators?|"
+            r"staff|employees?)\s+to\b",
             re.IGNORECASE,
         ),
     ]
@@ -92,17 +97,17 @@ class RequirementCandidateDetector:
     CONSTRAINT_PATTERNS = [
         re.compile(
             r"\b("
-            r"response time|"
+            r"response\s+time|"
             r"availability|"
             r"uptime|"
             r"throughput|"
-            r"concurrent users?|"
+            r"concurrent\s+users?|"
             r"maximum|minimum|"
             r"within\s+\d+|"
-            r"less than\s+\d+|"
-            r"greater than\s+\d+|"
-            r"at least\s+\d+|"
-            r"at most\s+\d+|"
+            r"less\s+than\s+\d+|"
+            r"greater\s+than\s+\d+|"
+            r"at\s+least\s+\d+|"
+            r"at\s+most\s+\d+|"
             r"\d+\s*(?:ms|milliseconds|"
             r"seconds?|minutes?|hours?|%)"
             r")\b",
@@ -114,8 +119,8 @@ class RequirementCandidateDetector:
             r"hashed|"
             r"authenticated|"
             r"authorized|"
-            r"compliant with|"
-            r"compatible with"
+            r"compliant\s+with|"
+            r"compatible\s+with"
             r")\b",
             re.IGNORECASE,
         ),
@@ -125,15 +130,18 @@ class RequirementCandidateDetector:
         r"\b("
         r"system|application|platform|software|"
         r"service|interface|portal|website|"
-        r"mobile application|web application"
+        r"backend|frontend|database|"
+        r"mobile\s+application|web\s+application"
         r")\b"
-        r".{0,80}\b("
+        r".{0,100}\b("
         r"provide|provides|support|supports|"
         r"allow|allows|enable|enables|"
         r"offer|offers|perform|process|generate|"
         r"store|display|send|receive|"
         r"validate|calculate|manage|"
-        r"maintain|record|track"
+        r"maintain|record|track|"
+        r"encrypt|authenticate|authorize|"
+        r"failover|interface|integrate"
         r")\b",
         re.IGNORECASE,
     )
@@ -146,13 +154,85 @@ class RequirementCandidateDetector:
         r"employee|employees|manager|managers|"
         r"staff|actor|actors"
         r")\b"
-        r".{0,80}\b("
+        r".{0,100}\b("
         r"can|may|must|shall|should|"
         r"able|access|create|view|"
         r"edit|delete|submit|download|"
         r"upload|search|select|manage|"
         r"receive|send|track"
         r")\b",
+        re.IGNORECASE,
+    )
+
+    # Definitions such as:
+    # "Must: Indicates a mandatory requirement."
+    DEFINITION_PATTERN = re.compile(
+        r"^\s*(?:must|shall|should|may|can)\s*:"
+        r"\s*(?:indicates?|means?|refers?\s+to)\b",
+        re.IGNORECASE,
+    )
+
+    DOCUMENT_PURPOSE_PATTERN = re.compile(
+        r"^\s*the\s+purpose\s+of\s+(?:this|the)\s+"
+        r"(?:software\s+requirements?\s+specification|"
+        r"SRS|requirements?\s+document)"
+        r"\b",
+        re.IGNORECASE,
+    )
+
+    DOCUMENT_REFERENCE_PATTERN = re.compile(
+        r"^\s*.*\b(?:business\s+requirements?\s+document|"
+        r"BRD|software\s+requirements?\s+specification|"
+        r"SRS)\b"
+        r".*\b(?:v\d+(?:\.\d+)*|version\s+\d+(?:\.\d+)*)\b",
+        re.IGNORECASE,
+    )
+
+    STAKEHOLDER_NEED_PATTERN = re.compile(
+        r"^\s*[A-Za-z][A-Za-z0-9 _-]*\s*:"
+        r"\s*need(?:s)?\b",
+        re.IGNORECASE,
+    )
+
+    DEPENDENCY_PATTERN = re.compile(
+        r"\b(?:relies?\s+on|depends?\s+on|"
+        r"dependent\s+on|requires?\s+an?\s+external)\b",
+        re.IGNORECASE,
+    )
+
+    # Project/document instructions rather than system requirements.
+    PROJECT_INSTRUCTION_PATTERN = re.compile(
+        r"^\s*(?:the\s+)?"
+        r"(?:development|project|engineering|implementation|"
+        r"technical|documentation)\s+"
+        r"(?:team|staff|group)\b",
+        re.IGNORECASE,
+    )
+
+    # Metadata-style labels.
+    METADATA_PATTERN = re.compile(
+        r"^\s*(?:"
+        r"document\s+(?:number|id|identifier|version|status)|"
+        r"version|"
+        r"prepared\s+by|"
+        r"author|"
+        r"date|"
+        r"revision|"
+        r"priority|"
+        r"category|"
+        r"requirement\s+id|"
+        r"guideline\s+id"
+        r")\s*:",
+        re.IGNORECASE,
+    )
+
+    # Priority values extracted from Agile/backlog tables.
+    PRIORITY_VALUE_PATTERN = re.compile(
+        r"^\s*(?:"
+        r"high|medium|low"
+        r")\s*\("
+        r"(?:must|should|could|won't|wont)"
+        r"\)\s*$",
         re.IGNORECASE,
     )
 
@@ -175,7 +255,7 @@ class RequirementCandidateDetector:
         re.compile(
             r"^\s*(?:table|figure|appendix|"
             r"references?|glossary|"
-            r"data dictionary)\b",
+            r"data\s+dictionary)\b",
             re.IGNORECASE,
         ),
     ]
@@ -183,9 +263,6 @@ class RequirementCandidateDetector:
     def detect(self, text: str) -> CandidateDetection:
         """
         Evaluate one text segment.
-
-        Detection is based on several independent signals rather
-        than a hard-coded list of domain-specific actors.
         """
 
         text = text.strip()
@@ -197,7 +274,19 @@ class RequirementCandidateDetector:
                 signals=[],
             )
 
-        for pattern in self.NEGATIVE_PATTERNS:
+        negative_patterns = [
+            *self.NEGATIVE_PATTERNS,
+            self.DEFINITION_PATTERN,
+            self.DOCUMENT_PURPOSE_PATTERN,
+            self.DOCUMENT_REFERENCE_PATTERN,
+            self.STAKEHOLDER_NEED_PATTERN,
+            self.DEPENDENCY_PATTERN,
+            self.PROJECT_INSTRUCTION_PATTERN,
+            self.METADATA_PATTERN,
+            self.PRIORITY_VALUE_PATTERN,
+        ]
+
+        for pattern in negative_patterns:
             if pattern.search(text):
                 return CandidateDetection(
                     is_candidate=False,
@@ -242,12 +331,65 @@ class RequirementCandidateDetector:
             signals.append("actor_action")
             score += 0.20
 
-        # A requirement with an explicit ID is a strong candidate
-        # even when the wording doesn't contain a modal verb.
+        # # A sentence with a modal is only a strong requirement candidate
+        # # when it has an appropriate subject/action structure.
+        # modal_has_subject = bool(
+        #     re.search(
+        #         r"^\s*(?:"
+        #         r"the\s+\w+|"
+        #         r"all\s+\w+|"
+        #         r"users?\b|"
+        #         r"customers?\b|"
+        #         r"clients?\b|"
+        #         r"administrators?\b|"
+        #         r"operators?\b|"
+        #         r"staff\b|"
+        #         r"employees?\b|"
+        #         r"the\s+system\b|"
+        #         r"the\s+application\b|"
+        #         r"the\s+platform\b|"
+        #         r"the\s+service\b|"
+        #         r"response\s+time\b|"
+        #         r"response\s+times\b|"
+        #         r"latency\b|"
+        #         r"throughput\b|"
+        #         r"availability\b|"
+        #         r"uptime\b|"
+        #         r"performance\b|"
+        #         r"capacity\b|"
+        #         r"load\b|"
+        #         r"processing\s+time\b|"
+        #         r"query\s+time\b|"
+        #         r"startup\s+time\b"
+        #         r")",
+        #         text,
+        #         re.IGNORECASE,
+        #     )
+        # )
+        
+        # A modal requirement may begin with virtually any meaningful
+        # noun phrase. Do not maintain a domain-specific actor list.
         #
-        # A user story is also strong evidence on its own.
+        # Examples:
+        #   Doctors must create patient records.
+        #   Nurses should update vital signs.
+        #   Transaction processing must complete within 3 seconds.
+        #   The system shall encrypt patient data.
         #
-        # Other forms require multiple supporting signals.
+        # We deliberately allow generic noun phrases here because
+        # ReqInsight must remain domain-agnostic.
+        modal_has_subject = bool(
+            re.search(
+                r"^\s*"
+                r"[A-Za-z][A-Za-z0-9_-]*"
+                r"(?:\s+[A-Za-z][A-Za-z0-9_-]*){0,7}"
+                r"\s+"
+                r"(?:must|shall|should|may)\b",
+                text,
+                re.IGNORECASE,
+            )
+        )
+
         if "explicit_id" in signals:
             is_candidate = score >= 0.45
 
@@ -255,7 +397,16 @@ class RequirementCandidateDetector:
             is_candidate = True
 
         elif "modal" in signals:
-            is_candidate = score >= 0.35
+            is_candidate = (
+                modal_has_subject
+                and (
+                    "system_action" in signals
+                    or "actor_action" in signals
+                    or "constraint" in signals
+                    or "capability" in signals
+                    or len(text.split()) >= 6
+                )
+            )
 
         else:
             is_candidate = score >= 0.45

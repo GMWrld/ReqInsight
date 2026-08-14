@@ -106,7 +106,7 @@ class QualityRuleEngine:
             return []
 
         # Apply this rule primarily to non-functional requirements.
-        if requirement_id.startswith("NFR-"):
+        if requirement_id and requirement_id.startswith("NFR-"):
             return [
                 {
                     "rule": "MEASURABILITY",

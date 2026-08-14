@@ -8,7 +8,7 @@ class TestRealRequirementExtraction(unittest.TestCase):
 
     def test_extract_from_real_srs(self):
 
-        file_path = r"C:\Users\hp\Desktop\GM IU Work\Computer Science Project II\ReqInsight Project\ReqInsight\data\SELP_SRS.pdf"
+        file_path = r"C:\Users\hp\Desktop\GM IU Work\Computer Science Project II\ReqInsight Project\ReqInsight\data\Telemedicine_RPM_System_SRS_v1.0.pdf"
 
         parser = DocumentParser()
         document = parser.parse(file_path)

@@ -106,6 +106,55 @@ class TestRequirementCandidateDetector(unittest.TestCase):
             "Appendix A: Data Dictionary"
         )
 
+    def test_document_purpose_is_not_requirement(self):
+        self.assert_not_candidate(
+            "The purpose of this Software Requirements Specification (SRS) "
+            "document is to provide a detailed description."
+        )
+
+    def test_modal_definition_is_not_requirement(self):
+        self.assert_not_candidate(
+            "Must: Indicates a mandatory requirement."
+        )
+
+    def test_should_definition_is_not_requirement(self):
+        self.assert_not_candidate(
+            "Should: Indicates a recommended requirement."
+        )
+
+    def test_may_definition_is_not_requirement(self):
+        self.assert_not_candidate(
+            "May: Indicates an optional requirement."
+        )
+
+    def test_product_description_is_not_requirement(self):
+        self.assert_not_candidate(
+            "The SELP is a web-based application designed to facilitate "
+            "virtual learning."
+        )
+
+    def test_product_description_continuation_is_not_requirement(self):
+        self.assert_not_candidate(
+            "video lectures, create quizzes, and track student progress."
+        )
+
+    def test_document_reference_title_is_not_requirement(self):
+        self.assert_not_candidate(
+            "SELP Business Requirements Document (BRD) v1.0."
+        )
+
+    def test_stakeholder_need_is_not_requirement(self):
+        self.assert_not_candidate(
+            "Students: Need an intuitive interface to access courses, "
+            "complete assessments, and receive feedback."
+        )
+
+    def test_dependency_statement_is_not_requirement(self):
+        self.assert_not_candidate(
+            "The system relies on a third-party Cloud Storage Service "
+            "(e.g., AWS S3) for hosting media files."
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
