@@ -57,6 +57,23 @@ class TestQuantifiableConstraintDetector(unittest.TestCase):
 
         self.assertIn("24 hours", result)
 
+    def test_detect_minutes_constraint(self):
+
+        text = "The system must enforce a 10-minute inactivity timeout."
+
+        result = self.detector.detect(text)
+
+        self.assertIn("10-minute", result)
+
+
+    def test_detect_devices_constraint(self):
+
+        text = "The system must ingest data from at least 10,000 concurrent devices."
+
+        result = self.detector.detect(text)
+
+        self.assertIn("10,000 concurrent devices", result)
+
 
 if __name__ == "__main__":
     unittest.main()

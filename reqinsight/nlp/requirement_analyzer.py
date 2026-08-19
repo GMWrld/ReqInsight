@@ -3,9 +3,11 @@ from typing import Dict
 
 from reqinsight.models.requirement import Requirement
 from reqinsight.nlp.vague_term_detector import VagueTermDetector
-
 from reqinsight.nlp.quantifiable_constraint_detector import (
-    QuantifiableConstraintDetector
+    QuantifiableConstraintDetector,
+)
+from reqinsight.analysis.verifiability_detector import (
+    VerifiabilityDetector,
 )
 
 
@@ -23,13 +25,17 @@ class RequirementAnalyzer:
 
     def __init__(self):
         self.vague_term_detector = VagueTermDetector()
+
         self.quantifiable_constraint_detector = (
             QuantifiableConstraintDetector()
         )
 
+        self.verifiability_detector = VerifiabilityDetector()
+
     def analyze(self, requirement: Requirement) -> Dict:
         """
-        Analyze one software requirement and return linguistic features.
+        Analyze one software requirement and return linguistic
+        and verifiability features.
         """
 
         text = requirement.text.strip()
@@ -42,24 +48,58 @@ class RequirementAnalyzer:
             self.quantifiable_constraint_detector.detect(text)
         )
 
+        verifiability = self.verifiability_detector.detect(text)
+
         return {
             "requirement_id": requirement.requirement_id,
             "text": text,
+
             "word_count": len(words),
             "character_count": len(text),
+
             "modal_words": self._find_modal_words(words),
             "has_modal": self._has_modal_words(words),
+
             "vague_terms": vague_terms,
             "has_vague_terms": len(vague_terms) > 0,
+
             "quantifiable_constraints": quantifiable_constraints,
-            "has_quantifiable_constraint": len(quantifiable_constraints) > 0,
-            "text": requirement.text,
+            "has_quantifiable_constraint": (
+                len(quantifiable_constraints) > 0
+            ),
+
+            "technical_criteria": (
+                verifiability["technical_criteria"]
+            ),
+
+            "verification_terms": (
+                verifiability["verification_terms"]
+            ),
+
+            "non_verifiable_terms": (
+                verifiability["non_verifiable_terms"]
+            ),
+
+            "subjective_terms": (
+                verifiability["subjective_terms"]
+            ),
+
+            "objective_indicators": (
+                verifiability["objective_indicators"]
+            ),
+
+            "verifiable": (
+                verifiability["verifiable"]
+            ),
         }
 
     def _tokenize(self, text: str):
         """Tokenize requirement text into words."""
 
-        return re.findall(r"\b[\w'-]+\b", text.lower())
+        return re.findall(
+            r"\b[\w'-]+\b",
+            text.lower(),
+        )
 
     def _find_modal_words(self, words):
         """Return requirement-oriented modal words found in the text."""
@@ -76,30 +116,4 @@ class RequirementAnalyzer:
         return any(
             word in self.MODAL_WORDS
             for word in words
-        )
-
-    def test_detect_quantifiable_constraints(self):
-
-        requirement = Requirement(
-            requirement_id="NFR-01",
-            text=(
-                "The platform must support up to 1,000 concurrent users "
-                "with a response time under 2 seconds."
-            )
-        )
-
-        result = self.analyzer.analyze(requirement)
-
-        self.assertIn(
-            "1,000 users",
-            result["quantifiable_constraints"]
-        )
-
-        self.assertIn(
-            "2 seconds",
-            result["quantifiable_constraints"]
-        )
-
-        self.assertTrue(
-            result["has_quantifiable_constraint"]
         )

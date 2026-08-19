@@ -6,10 +6,32 @@ class QuantifiableConstraintDetector:
     """Detects measurable constraints in software requirements."""
 
     PATTERNS = [
+        # Percentages
         r"\b\d+(?:\.\d+)?\s*%",
+
+        # Time in milliseconds
         r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(?:ms|milliseconds?)\b",
-        r"\b\d+(?:\.\d+)?\s*(?:s|sec|secs|seconds?|h|hr|hrs|hours?)\b",
-        r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(?:users?|requests?|items?|records?)\b",
+
+        # Time durations
+        r"\b\d+(?:,\d{3})*(?:\.\d+)?(?:\s+|-)(?:s|sec|secs|seconds?|m|min|mins|minutes?|h|hr|hrs|hours?|d|day|days?|y|yr|yrs|years?)\b",
+
+        # Quantities with countable entities
+        r"\b\d+(?:,\d{3})*(?:\.\d+)?(?:\s+(?:concurrent|active|total|maximum|minimum))?\s*(?:users?|requests?|items?|records?|devices?|transactions?|sessions?)\b",
+
+        # Quantity followed by a unit such as MB / GB
+        r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(?:kb|mb|gb|tb)\b",
+
+        # "within X seconds/minutes/hours"
+        r"\bwithin\s+\d+(?:,\d{3})*(?:\.\d+)?\s*(?:ms|milliseconds?|s|sec|secs|seconds?|m|min|mins|minutes?|h|hr|hrs|hours?)\b",
+
+        # "up to X MB/GB/etc."
+        r"\bup\s+to\s+\d+(?:,\d{3})*(?:\.\d+)?\s*(?:kb|mb|gb|tb)\b",
+
+        # "at least / at most X ..."
+        r"\b(?:at\s+least|at\s+most)\s+\d+(?:,\d{3})*(?:\.\d+)?(?:\s*(?:%|ms|milliseconds?|s|sec|secs|seconds?|m|min|mins|minutes?|h|hr|hrs|hours?|kb|mb|gb|tb))?\b",
+
+        # "every X seconds/minutes/hours/days"
+        r"\bevery\s+\d+(?:,\d{3})*(?:\.\d+)?\s*(?:ms|milliseconds?|s|sec|secs|seconds?|m|min|mins|minutes?|h|hr|hrs|hours?|d|day|days?)\b",
     ]
 
     def detect(self, text: str) -> List[str]:

@@ -1,0 +1,121 @@
+requirement_id,domain,requirement_text,modal_issue,vague_issue,measurability_issue,verifiability_issue,annotator_notes
+R-101,Telemedicine,"Register patients and doctors using email, phone number, and strong password (minimum 8 alphanumeric characters).",0,0,0,0.0,Explicit password criterion makes the requirement objectively assessable.
+R-102,Telemedicine,"Support RBAC with Patient, Physician, Nurse, and Admin roles.",0,0,0,0.0,"The defined roles are testable, but there is no quantitative or threshold criterion."
+R-103,Telemedicine,Enforce MFA via OTP for all doctor and admin accounts.,0,0,0,0.0,The requirement is objectively testable but contains no quantitative criterion.
+R-104,Telemedicine,"Allow patients to update address, emergency contact, allergies, and medications.",0,0,0,0.0,"The functionality is testable, but no measurable criterion is specified."
+R-202,Telemedicine,Ingest vital signs every 5 minutes (configurable) and store them in a time-series database.,0,0,0,0.0,Explicit frequency and storage target.
+R-204,Telemedicine,"If no device data is received for more than 60 minutes, alert the patient and assigned nurse.",0,0,0,0.0,Explicit 60-minute threshold and defined alert action.
+R-302,Telemedicine,Allow doctors to configure patient-specific warning and critical thresholds.,0,0,0,0.0,"Threshold configuration is testable, but the threshold criteria themselves are not specified."
+R-303,Telemedicine,"Trigger Critical Alert with red banner, audible alarm, SMS, and push notification when thresholds are crossed.",0,0,0,0.0,"The required outputs are testable, but no quantitative criterion is given."
+R-403,Telemedicine,Encrypt video consultations end-to-end using WebRTC technology.,0,0,0,0.0,"Technology and encryption behavior are testable, but no quantitative criterion is specified."
+R-404,Telemedicine,Record consultations only with explicit consent from both parties and retain securely for 7 years.,0,1,0,0.0,The seven-year retention period is measurable; 'securely' is insufficiently defined.
+NFR-01,Telemedicine,"Ingest data from at least 10,000 concurrent devices.",0,0,0,0.0,Explicit capacity requirement.
+NFR-06,Telemedicine,Maintain detailed patient-record access audit logs.,0,1,1,1.0,"'Detailed' is undefined, making the acceptance condition insufficiently objective."
+NFR-07,Telemedicine,Enforce 10-minute inactivity timeout for clinical users.,0,0,0,0.0,Explicit 10-minute threshold.
+NFR-12,Telemedicine,"Design for low technical proficiency with large fonts, high contrast, and voice-over support.",0,1,1,1.0,'Low technical proficiency' is undefined and no concrete accessibility thresholds are specified.
+NFR-14,Telemedicine,90% of new patients should pair a wearable and view vitals within 5 minutes without support.,1,0,0,0.0,"The requirement is measurable and verifiable, but 'should' weakens the mandatory obligation."
+FR-A-01,Hospital,"The system must allow receptionists to register a new patient by capturing Name, DOB, Contact Info, and Emergency Contact.",0,0,0,0.0,Functionality is objectively testable but no quantitative or threshold criterion is specified.
+FR-A-02,Hospital,The system must generate a unique Patient ID (format: PAT-YYYY-XXXXX) for every registration.,0,0,0,0.0,Explicit identifier format provides an objective acceptance criterion.
+FR-A-03,Hospital,"The system must provide a global search bar to retrieve patient records using Name, Phone, or Patient ID within < 1 second.",0,0,0,0.0,Explicit search fields and response-time threshold.
+FR-B-02,Hospital,"The system must maintain a versioned audit trail of all changes made to an EHR (who edited it, when, and what was changed).",0,0,0,0.0,"Required audit information is defined, but no quantitative criterion is specified."
+FR-B-04,Hospital,"The system must flag critical allergies (e.g., Penicillin) prominently in red across all screens to prevent medication errors.",0,1,0,1.0,'Prominently' is subjective and lacks an objective acceptance criterion.
+FR-C-02,Hospital,The system must send an automated alert to the Procurement Manager when stock levels fall below a defined minimum threshold (reorder level).,0,0,0,0.0,Explicit threshold-based trigger and recipient.
+FR-D-04,Hospital,The system must generate tax-compliant invoices (GST/IRS compliant) and send a PDF copy to the patient's registered email.,0,0,0,0.0,"Compliance standard and PDF/email behavior are testable, but no quantitative criterion is specified."
+HW-02,Hospital,The system should integrate with biometric fingerprint scanners for secure staff attendance marking.,1,1,0,1.0,'Should' weakens obligation and 'secure' lacks an objective security criterion.
+CI-01,Hospital,The system must support HL7 FHIR (Fast Healthcare Interoperability Resources) standards to exchange data with external labs.,0,0,0,0.0,FHIR is recognized technical terminology; no quantitative criterion is specified.
+CI-02,Hospital,"The system must connect to an SMS Gateway (e.g., Twilio) to send appointment reminders to patients 24 hours in advance.",0,0,0,0.0,Explicit 24-hour timing and defined integration behavior.
+NFR-01,Hospital,The system must be fully compliant with HIPAA (USA) and GDPR (Europe) regarding patient data privacy.,0,0,0,0.0,"Recognized regulatory standards provide objective compliance criteria, but no quantitative criterion is specified."
+NFR-03,Hospital,Session timeouts must occur after 10 minutes of inactivity for high-security roles (Doctors/Admins).,0,0,0,0.0,Explicit 10-minute threshold.
+NFR-04,Hospital,"The system must handle a load of up to 5,000 concurrent users during peak morning hours (9 AM - 11 AM) with a response time < 2 seconds.",0,0,0,0.0,"Explicit capacity, time window, and response-time criteria."
+NFR-08,Hospital,The User Interface must follow Material Design principles to ensure a consistent look and feel.,0,1,1,1.0,'Consistent look and feel' is subjective and lacks objective acceptance criteria.
+NFR-09,Hospital,"The system must provide context-sensitive help (tooltips) for medical coding fields (ICD-10, CPT codes) to assist doctors in billing.",0,0,0,0.0,"The required tooltip behavior is testable, but no quantitative criterion is specified."
+FR-09,SELP,Students must be able to browse the course catalog by category or search keywords.,0,0,0,0.0,Search functionality and filtering behavior are objectively testable.
+FR-10,SELP,"Students must be able to view video lectures with a ""Resume"" feature (remembering the last watched timestamp).",0,0,0,0.0,Resume behavior and timestamp persistence are objectively testable.
+FR-11,SELP,"The system must automatically mark a lecture as ""Completed"" once the student watches 90% of the video.",0,0,0,0.0,Explicit 90% threshold provides a clear acceptance criterion.
+FR-12,SELP,Educators must be able to create multiple-choice quizzes (MCQs).,0,0,0,0.0,Quiz creation functionality is directly testable.
+FR-13,SELP,The system must automatically grade MCQ quizzes and provide instant feedback to the student.,0,0,0,0.0,Automated grading and feedback behavior can be tested.
+FR-14,SELP,Educators must be able to create subjective assignments (upload file submission).,0,0,0,0.0,Assignment creation and file submission behavior are testable.
+FR-15,SELP,Educators must be able to enter grades manually for subjective assignments.,0,0,0,0.0,Manual grade-entry functionality is objectively testable.
+FR-16,SELP,Students must be able to view their overall grade and progress percentage per course.,0,0,0,0.0,Display of grades and progress percentage is objectively testable.
+FR-17,SELP,The system must analyze a student's quiz results and viewing speed to recommend supplementary content.,0,0,0,0.0,"Recommendation behavior can be tested, although no quantitative recommendation threshold is specified."
+FR-18,SELP,"If a student scores below 60% on a quiz, the system must recommend a ""Remedial Video"" on the failed topic.",0,0,0,0.0,Explicit 60% threshold and resulting recommendation provide clear acceptance criteria.
+FR-19,SELP,The system must have a discussion forum for each course where students can post questions.,0,0,0,0.0,Forum availability and question-posting functionality are testable.
+FR-20,SELP,Educators must receive notifications when a new question is posted in their course forum.,0,0,0,0.0,Notification trigger and recipient can be objectively tested.
+FR-21,SELP,The system must notify students via email when their assignments are graded.,0,0,0,0.0,Email notification behavior is objectively testable.
+UI-01,SELP,"The web interface must be responsive and adaptable to desktop, tablet, and mobile devices.",0,0,0,0.0,Responsive behavior across the specified device categories can be tested.
+UI-02,SELP,The dashboard must display a progress bar for ongoing courses.,0,0,0,0.0,Presence and display behavior of the progress bar are testable.
+NFR-01,SELP,"The platform must support up to 1,000 concurrent users with a response time under 2 seconds.",0,0,0,0.0,Explicit concurrency and response-time thresholds.
+NFR-02,SELP,Video lectures must start buffering within 3 seconds of the play button being pressed.,0,0,0,0.0,Explicit 3-second performance threshold.
+NFR-03,SELP,The database query time for the course catalog must average less than 500ms.,0,0,0,0.0,Explicit average query-time threshold.
+NFR-04,SELP,All data transmitted between the client and server must be encrypted using TLS 1.3.,0,0,0,0.0,TLS 1.3 is a specific and objectively verifiable technical standard.
+NFR-05,SELP,User passwords must be hashed using BCrypt.,0,0,0,0.0,BCrypt is a specific and objectively verifiable hashing technology.
+NFR-06,SELP,"User data privacy must comply with GDPR regulations (right to be forgotten, data export).",0,0,0,0.0,Specific regulatory framework and explicit privacy obligations provide objective verification criteria.
+NFR-07,SELP,The system must maintain 99.9% uptime (excluding scheduled maintenance windows).,0,0,0,0.0,Explicit 99.9% availability threshold.
+NFR-08,SELP,The system must perform automated backups of the database every 24 hours.,0,0,0,0.0,Explicit 24-hour backup frequency.
+NFR-09,SELP,The system must be localized for English and Spanish languages.,0,0,0,0.0,The supported languages are explicitly specified and can be objectively verified.
+NFR-10,SELP,95% of new users must be able to successfully enroll in a course without assistance.,0,0,0,0.0,Explicit 95% success criterion.
+NFR-11,SELP,"In the event of a video upload failure, the system must display a clear error message and allow the user to retry without losing the course setup.",0,1,0,1.0,'Clear error message' is subjective and lacks an objective acceptance criterion.
+HI-01,Smart Warehouse,The server must interface with barcode scanners (USB connected) to accept inventory data.,0,0,0,0.0,
+HI-02,Smart Warehouse,The system should support integration with thermal label printers (Zebra) for generating shipping labels.,1,0,0,0.0,
+SI-01,Smart Warehouse,"The SWAS must send navigation waypoints (X,Y coordinates) to the FMS via MQTT. The payload shall be JSON format.",0,0,0,0.0,
+SI-02,Smart Warehouse,The SWAS must consume incoming orders from SAP via a RESTful GET endpoint called /api/orders/pending. Response time must be under 500ms.,0,0,0,0.0,
+UI-01,Smart Warehouse,The main dashboard must display a live 3D heatmap of robot activity and zone congestion.,0,0,0,0.0,
+UI-02,Smart Warehouse,"The Inventory Screen must provide a search filter by SKU, Batch Number, or Expiry Date.",0,0,0,0.0,
+R-101,Smart Warehouse,The system shall automatically ingest new customer orders from the ERP every 5 minutes via the scheduled polling mechanism.,0,0,0,0.0,
+R-102,Smart Warehouse,The system must validate that the quantity requested for each SKU is available in inventory before accepting the order.,0,0,0,0.0,
+R-103,Smart Warehouse,"Upon validation, the system shall group orders into waves (clusters) based on proximity of items to optimize robot travel distance.",0,0,0,0.0,
+R-201,Smart Warehouse,The system shall assign specific pick/drop tasks to the nearest available AMR robot based on real-time location (GPS coordinate data).,0,0,0,0.0,
+R-202,Smart Warehouse,The system must prioritize Express orders (Priority Level 1) over standard orders.,0,0,0,0.0,
+R-203,Smart Warehouse,"If a robot fails to complete a task within 10 minutes, the system shall retask the job to another robot and mark the original robot as Out of Service for diagnostics.",0,0,0,0.0,
+R-301,Smart Warehouse,"The system must perform a perpetual inventory count, updating stock levels in real-time every time a robot picks or drops an item.",0,0,0,0.0,
+R-302,Smart Warehouse,"The system must generate a Cycle Count report at the end of every shift, highlighting discrepancies between system stock and physical scans.",0,0,0,0.0,
+R-303,Smart Warehouse,The system shall block the processing of orders for any SKU with stock < reorder threshold (minimum level) and send an alert to the Inventory Controller.,0,0,0,0.0,
+PR-01,Smart Warehouse,The system must process an incoming order from ERP and generate a robot task in under 2 seconds.,0,0,0,0.0,
+PR-02,Smart Warehouse,"The real-time inventory database must support up to 1,500 transactions per second (TPS) during peak hours.",0,0,0,0.0,
+PR-03,Smart Warehouse,The 3D dashboard UI must refresh robot positions with a latency of less than 500ms (near real-time).,0,0,0,0.0,
+PR-04,Smart Warehouse,The System must support a minimum of 50 concurrent robot control sessions without degradation.,0,0,0,0.0,
+DB-01,Smart Warehouse,"The system shall maintain the following core relational tables: Robot_Table, Inventory_Table, and Order_Table with the specified fields.",0,0,0,0.0,
+DB-02,Smart Warehouse,All time-stamped telemetry data shall be stored in a separate InfluxDB time-series database with a retention policy of 30 days.,0,0,0,0.0,
+SEC-01,Smart Warehouse,User access must be governed by Role-Based Access Control (RBAC). Default role is Read-Only.,0,0,0,0.0,
+SEC-02,Smart Warehouse,All API communication between SWAS and external systems must be encrypted using TLS 1.3.,0,0,0,0.0,
+SEC-03,Smart Warehouse,"User passwords must be stored using PBKDF2 hashing with a minimum of 10,000 iterations.",0,0,0,0.0,
+REL-01,Smart Warehouse,The system must have an uptime of 99.95% (excluding scheduled maintenance windows on Sundays 2:00 AM - 4:00 AM).,0,0,0,0.0,
+REL-02,Smart Warehouse,"In the event of a database crash, the system must failover to the secondary replica within 60 seconds.",0,0,0,0.0,
+US-01,Smart Warehouse,The Web UI must be accessible to color-blind users (avoid red/green only alerts; use icons/shapes).,0,0,0,0.0,
+US-02,Smart Warehouse,"All critical action buttons (e.g., Cancel Order, Shutdown Robot) must require a confirmation dialog to prevent accidental clicks.",0,0,0,0.0,
+MAINT-01,Smart Warehouse,"The system must maintain structured log files (ERROR, WARN, INFO) with a standard JSON format for integration with ELK stack.",0,0,0,0.0,
+MAINT-02,Smart Warehouse,The codebase must maintain a minimum test coverage of 80% for unit tests and 90% for critical path components.,0,0,0,0.0,
+ST-101,CashPilot,"As a new user, I want to sign up using my mobile number & OTP so that I don't have to remember a password.",0,0,0,0.0,
+ST-102,CashPilot,"As a user, I want to securely link my bank account via Plaid API so that transactions are pulled automatically.",0,0,0,0.0,
+ST-103,CashPilot,"As a user, I want to manually add a cash transaction if I pay with physical money.",0,0,0,0.0,
+ST-201,CashPilot,"As a user, I want the AI to automatically tag my transactions (e.g., Starbucks → Food & Dining) so I don’t have to do it manually.",0,0,0,0.0,
+ST-202,CashPilot,"As a user, I want to set a monthly budget for categories like Eating Out and receive alerts when I am at 80% of my limit.",0,0,0,0.0,
+ST-203,CashPilot,"As a user, I want to see a Weekly Summary report so I can review my habits quickly.",0,1,0,0.0,
+ST-301,CashPilot,"As a user, I want to create a Goal (e.g., Save $1000 for a new Phone) and track my progress.",0,0,0,0.0,
+ST-302,CashPilot,"As a user, I want to enable Round-Ups where spare change from purchases goes into my savings vault.",0,0,0,0.0,
+TECH-001,CashPilot,Mobile: Minimum iOS 14 / Android 10. Backend: AWS (ECS Fargate) for containerized microservices.,0,0,0,0.0,
+TECH-002,CashPilot,Cold Start: App must launch and show the dashboard within 2.5 seconds on a 4G network. Background sync must occur every 6 hours to pull new bank transactions without killing the battery.,0,0,0,0.0,
+TECH-003,CashPilot,Sensitive financial data must be encrypted at the application layer (AES-256-GCM) before being sent to the server. Users can optionally enable FaceID/TouchID to unlock the app.,0,0,0,0.0,
+TECH-004,CashPilot,"The backend must handle 10,000 concurrent API requests during Payday (1st of the month) without latency degradation.",0,0,0,0.0,
+TECH-005,CashPilot,"All user interactions (button clicks, screen views) must be logged to Mixpanel to track feature adoption and funnel drop-offs.",0,0,0,0.0,
+TECH-006,CashPilot,"The app must support currencies (USD, EUR, GBP) and date formats (MM/DD vs DD/MM). Default falls back to the device's regional settings.",0,0,0,0.0,
+VER-001,Telemedicine,The system should work properly under normal operating conditions.,1,1,1,1,"No objective acceptance criterion defines what properly or normal operating conditions mean."
+VER-002,Telemedicine,The application must provide an appropriate response when a patient encounters an error.,1,1,1,1,"Appropriate response is undefined and cannot be objectively verified from the requirement."
+VER-003,Hospital,The interface should be easy for doctors and nurses to use.,1,1,1,1,"Ease of use is subjective and no measurable usability criterion is provided."
+VER-004,Hospital,The system must maintain suitable performance during peak usage.,1,1,1,1,"Suitable performance and peak usage are undefined."
+VER-005,Hospital,The system should handle patient records efficiently.,1,1,1,1,"Efficiently has no objective acceptance criterion."
+VER-006,SELP,The platform must provide a satisfactory learning experience for students.,1,1,1,1,"Satisfactory learning experience is subjective and lacks testable criteria."
+VER-007,SELP,The system should respond appropriately when a video cannot be played.,1,1,1,1,"Appropriately is undefined and the expected observable behavior is not specified."
+VER-008,CashPilot,The application must provide reliable transaction synchronization.,1,1,1,1,"Reliable synchronization is not defined through an observable acceptance criterion."
+VER-009,CashPilot,The dashboard should present useful financial information to users.,1,1,1,1,"Useful financial information is subjective and not objectively testable."
+VER-010,Telemedicine,The system should ensure secure handling of patient information.,1,1,1,1,"Secure handling is undefined without specifying an objectively verifiable security criterion."
+VER-011,Telemedicine,The system must display the patient's current heart rate on the dashboard.,0,0,0,0,"The required behavior is explicitly stated and can be verified by checking dashboard output."
+VER-012,Telemedicine,The system must send a critical alert to the assigned physician within 5 seconds.,0,0,0,0,"The five-second criterion provides an objective acceptance test."
+VER-013,Hospital,The system must support HL7 FHIR for exchanging patient clinical data.,0,0,0,0,"Support for the specified standard can be objectively tested through an integration test."
+VER-014,Hospital,The system must allow doctors to reset their passwords using an OTP.,0,0,0,0,"The required workflow can be executed and verified."
+VER-015,Hospital,The system must encrypt stored patient records using AES-256.,0,0,0,0,"The specified encryption algorithm provides an objectively verifiable technical criterion."
+VER-016,SELP,The system must allow students to upload PDF assignments up to 20 MB.,0,0,0,0,"File type and maximum size provide explicit acceptance criteria."
+VER-017,SELP,The system must send an email notification when an educator grades an assignment.,0,0,0,0,"The notification behavior can be directly tested."
+VER-018,CashPilot,The application must synchronize new bank transactions every 6 hours.,0,0,0,0,"The six-hour synchronization interval provides an objective criterion."
+VER-019,CashPilot,The dashboard must display monthly income and expenditure totals for the selected account.,0,0,0,0,"The required displayed values can be verified against the underlying account data."
+VER-020,Telemedicine,"The system must support English, Spanish, and Mandarin user interfaces.",0,0,0,0,"The supported languages are explicitly specified and can be objectively verified."
