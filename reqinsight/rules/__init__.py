@@ -1,1 +1,0 @@
-"""Requirement quality rules."""
